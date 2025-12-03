@@ -1,4 +1,4 @@
-# Trello-like Desktop App
+# Trello-like Desktop App(ver1.0.0)
 
 Windows向けタスク管理デスクトップアプリケーション（Trelloライク）
 
