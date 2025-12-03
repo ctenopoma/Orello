@@ -3,7 +3,6 @@ const path = require('path');
 const { spawn } = require('child_process');
 
 let mainWindow;
-let pythonProcess;
 
 function createWindow() {
     mainWindow = new BrowserWindow({
@@ -15,8 +14,14 @@ function createWindow() {
         },
     });
 
-    const startUrl = process.env.ELECTRON_START_URL || 'http://localhost:5173';
-    mainWindow.loadURL(startUrl);
+    // In production, load from dist folder
+    // In development, load from Vite dev server
+    if (app.isPackaged) {
+        mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
+    } else {
+        const startUrl = process.env.ELECTRON_START_URL || 'http://localhost:5173';
+        mainWindow.loadURL(startUrl);
+    }
 
     mainWindow.on('closed', function () {
         mainWindow = null;
