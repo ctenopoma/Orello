@@ -2,6 +2,23 @@
 
 Windows向けタスク管理デスクトップアプリケーション（Trelloライク）
 
+## 📥 ダウンロード（エンドユーザー向け）
+
+最新バージョンのインストーラーは [Releases](../../releases) ページからダウンロードできます。
+
+**現在のバージョン: v1.0.0**
+
+### インストール手順
+1. [Releases](../../releases) ページから `TaskManager-Setup-1.0.0.exe` をダウンロード
+2. ダウンロードしたEXEファイルを実行
+3. インストールウィザードに従ってインストール
+4. デスクトップのショートカットから起動
+
+> [!IMPORTANT]
+> **Python 3.8以上が必要です**
+> 
+> アプリケーション実行前に、[Python公式サイト](https://www.python.org/downloads/)からPythonをインストールしてください。
+
 ## 必要な環境
 
 - **Node.js**: v18以上推奨（v16でも動作可能だが、いくつかの依存関係をダウングレード済み）
@@ -107,4 +124,15 @@ npm run build:electron
 
 ビルドが完了すると、以下の場所に実行ファイルが作成されます：
 - `frontend/dist-electron/win-unpacked/TaskManager.exe` - 実行ファイル
-- `frontend/dist-electron/TaskManager Setup X.X.X.exe` - インストーラー（NSISフォーマット）
+- `frontend/dist-electron/TaskManager Setup 1.0.0.exe` - インストーラー（NSISフォーマット）
+
+## 🚀 リリース方法（開発者向け）
+
+詳細は [RELEASE.md](RELEASE.md) を参照してください。
+
+### 簡単な手順
+
+1. バージョン番号を更新（`frontend/package.json`）
+2. ビルド: `npm run build:electron`
+3. コミット・タグ作成: `git tag v1.x.x`
+4. GitHub Releasesでインストーラーを公開
