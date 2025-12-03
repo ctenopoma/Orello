@@ -24,6 +24,12 @@ function createWindow() {
 }
 
 function startPythonBackend() {
+    // Skip if SKIP_PYTHON env variable is set (for development when Python is already running)
+    if (process.env.SKIP_PYTHON === 'true') {
+        console.log('Skipping Python backend startup (SKIP_PYTHON=true)');
+        return;
+    }
+
     const pythonExecutable = 'python';
     const backendDir = path.join(__dirname, '../../');
 
