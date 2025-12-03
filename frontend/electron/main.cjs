@@ -11,11 +11,10 @@ function createWindow() {
         height: 800,
         webPreferences: {
             nodeIntegration: true,
-            contextIsolation: false, // For simplicity in this demo
+            contextIsolation: false,
         },
     });
 
-    // In development, load from Vite dev server
     const startUrl = process.env.ELECTRON_START_URL || 'http://localhost:5173';
     mainWindow.loadURL(startUrl);
 
@@ -25,13 +24,12 @@ function createWindow() {
 }
 
 function startPythonBackend() {
-    const pythonExecutable = 'python'; // Or path to venv python
-    const scriptPath = path.join(__dirname, '../../backend/main.py');
+    const pythonExecutable = 'python';
+    const backendDir = path.join(__dirname, '../../');
 
-    // Check if we are in dev or prod to adjust paths if necessary
-    // For now assuming dev structure
-
-    pythonProcess = spawn(pythonExecutable, [scriptPath]);
+    pythonProcess = spawn(pythonExecutable, ['-m', 'backend.main'], {
+        cwd: backendDir,
+    });
 
     pythonProcess.stdout.on('data', (data) => {
         console.log(`Python: ${data}`);
@@ -48,7 +46,7 @@ function startPythonBackend() {
 
 app.on('ready', () => {
     startPythonBackend();
-    createWindow();
+    setTimeout(createWindow, 2000);
 });
 
 app.on('window-all-closed', function () {

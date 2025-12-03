@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List as TList, Optional
 from datetime import datetime
 
 class CardBase(BaseModel):
@@ -29,7 +29,7 @@ class List(ListBase):
     id: int
     board_id: int
     created_at: datetime
-    cards: List[Card] = []
+    cards: TList[Card] = []
 
     class Config:
         orm_mode = True
@@ -43,7 +43,7 @@ class BoardCreate(BoardBase):
 class Board(BoardBase):
     id: int
     created_at: datetime
-    lists: List[List] = []
+    lists: TList[List] = []
 
     class Config:
         orm_mode = True
