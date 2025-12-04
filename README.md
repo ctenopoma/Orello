@@ -1,4 +1,4 @@
-# Trello-like Desktop App(ver1.0.0)
+# Trello-like Desktop App(ver1.1.0)
 
 Windows向けタスク管理デスクトップアプリケーション（Trelloライク）
 
@@ -6,9 +6,10 @@ Windows向けタスク管理デスクトップアプリケーション（Trello�
 
 最新バージョンのインストーラーは [Releases](../../releases) ページからダウンロードできます。
 
-**現在のバージョン: v1.0.0**
+**現在のバージョン: v1.1.0**
 
 ### インストール手順
+
 1. [Releases](../../releases) ページから `Orello-Setup-1.0.0.exe` をダウンロード
 2. ダウンロードしたEXEファイルを実行
 3. インストールウィザードに従ってインストール
@@ -16,7 +17,7 @@ Windows向けタスク管理デスクトップアプリケーション（Trello�
 
 > [!IMPORTANT]
 > **Python 3.8以上が必要です**
-> 
+>
 > アプリケーション実行前に、[Python公式サイト](https://www.python.org/downloads/)からPythonをインストールしてください。
 
 ## 必要な環境
@@ -37,8 +38,9 @@ Windows向けタスク管理デスクトップアプリケーション（Trello�
 
 > [!IMPORTANT]
 > **Python環境が必要です**
-> 
+>
 > このアプリケーションを実行するには、システムにPythonがインストールされている必要があります。
+>
 > - Python 3.8以上
 > - `python` コマンドがPATHに含まれていること
 
@@ -52,19 +54,24 @@ Windows向けタスク管理デスクトップアプリケーション（Trello�
 **アプリが起動しない場合:**
 
 1. **Pythonがインストールされているか確認**
+
    ```bash
    python --version
    ```
+
    Python 3.8以上が表示されればOKです。
 
 2. **コマンドプロンプトから手動で起動してエラーを確認**
+
    ```bash
    cd frontend/dist-electron/win-unpacked
    Orello.exe
    ```
+
    エラーメッセージが表示される場合は、そのメッセージを確認してください。
 
 3. **依存関係が不足している場合**
+
    ```bash
    cd backend
    pip install -r requirements.txt
@@ -93,12 +100,14 @@ npm install
 #### 方法1: 別々のターミナルで起動（推奨）
 
 **ターミナル1 - Pythonバックエンド**
+
 ```bash
 cd c:/Users/naoki/Documents/Work/desktop_app
 python -m backend.main
 ```
 
 **ターミナル2 - フロントエンド（Electron + React）**  
+
 ```bash
 cd frontend
 npm run dev
@@ -123,6 +132,7 @@ npm run build:electron
 ```
 
 ビルドが完了すると、以下の場所に実行ファイルが作成されます：
+
 - `frontend/dist-electron/win-unpacked/Orello.exe` - 実行ファイル
 - `frontend/dist-electron/Orello Setup 1.0.0.exe` - インストーラー（NSISフォーマット）
 
