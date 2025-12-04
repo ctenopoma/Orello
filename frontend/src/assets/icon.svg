@@ -1,9 +1,0 @@
-<svg width="300" height="420" viewBox="0 0 300 420" xmlns="http://www.w3.org/2000/svg">
-  <!-- Outer rounded O-shape -->
-  <rect x="10" y="10" width="280" height="400" rx="140" fill="white" stroke="#1479FF" stroke-width="24"/>
-  
-  <!-- Kanban cards -->
-  <rect x="60" y="90" width="50" height="240" rx="12" fill="#1FB6FF"/>
-  <rect x="130" y="90" width="50" height="240" rx="12" fill="#1479FF" opacity="0.7"/>
-  <rect x="200" y="90" width="50" height="240" rx="12" fill="#1479FF" opacity="0.7"/>
-</svg>
