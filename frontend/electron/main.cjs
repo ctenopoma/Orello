@@ -37,8 +37,12 @@ function createMenu() {
                         label: name,
                         type: 'radio',
                         click: () => {
+                            console.log('Theme menu clicked:', key);
                             if (mainWindow && mainWindow.webContents) {
+                                console.log('Sending set-theme event with:', key);
                                 mainWindow.webContents.send('set-theme', key);
+                            } else {
+                                console.error('mainWindow not available');
                             }
                         }
                     }))

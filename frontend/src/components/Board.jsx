@@ -137,10 +137,13 @@ export default function Board({ board, onUpdate }) {
         try {
             const { ipcRenderer } = window.require?.('electron') || {};
             if (ipcRenderer) {
-                const handleThemeChange = (themeKey) => {
+                const handleThemeChange = (event, themeKey) => {
+                    console.log('Theme change received:', themeKey);
                     // Validate theme exists before setting
                     if (THEMES[themeKey]) {
                         setTheme(themeKey);
+                    } else {
+                        console.error('Invalid theme:', themeKey);
                     }
                 };
                 ipcRenderer.on('set-theme', handleThemeChange);
@@ -149,7 +152,7 @@ export default function Board({ board, onUpdate }) {
                 };
             }
         } catch (error) {
-            // Not in Electron context or ipcRenderer not available
+            console.error('Failed to setup IPC listener:', error);
         }
     }, []);
 
