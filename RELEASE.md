@@ -19,8 +19,8 @@ npm run build:electron
 ### 2. ビルド成果物の確認
 
 以下のファイルが生成されていることを確認：
-- `frontend/dist-electron/win-unpacked/TaskManager.exe`
-- `frontend/dist-electron/TaskManager Setup 1.0.0.exe` (インストーラー)
+- `frontend/dist-electron/win-unpacked/Orello.exe`
+- `frontend/dist-electron/Orello Setup 1.0.0.exe` (インストーラー)
 
 ### 3. Gitコミットとタグ作成（完了）
 
@@ -60,15 +60,15 @@ git push origin v1.0.0
      ### ダウンロード
      
      **Windows向け:**
-     - `TaskManager-Setup-1.0.0.exe` - インストーラー（推奨）
-     - `TaskManager-1.0.0-win-portable.zip` - ポータブル版
+     - `Orello-Setup-1.0.0.exe` - インストーラー（推奨）
+     - `Orello-1.0.0-win-portable.zip` - ポータブル版
      
      ### システム要件
      - Windows 10以上
      - Python 3.8以上がインストールされていること
      
      ### インストール方法
-     1. `TaskManager-Setup-1.0.0.exe` をダウンロード
+     1. `Orello-Setup-1.0.0.exe` をダウンロード
      2. 実行してインストール
      3. デスクトップのショートカットから起動
      
@@ -78,7 +78,7 @@ git push origin v1.0.0
      ```
 
 5. 以下のファイルをアップロード（Drag & Drop or "Attach binaries"）：
-   - `frontend/dist-electron/TaskManager Setup 1.0.0.exe`
+   - `frontend/dist-electron/Orello Setup 1.0.0.exe`
    - （オプション）`frontend/dist-electron/win-unpacked/` フォルダをZIP圧縮してアップロード
 
 6. 「Publish release」をクリック
@@ -93,7 +93,7 @@ git push origin v1.0.0
 gh release create v1.0.0 \
   --title "v1.0.0 - Initial Release" \
   --notes "初回リリース。詳細はREADME.mdを参照。" \
-  "frontend/dist-electron/TaskManager Setup 1.0.0.exe#TaskManager-Setup-1.0.0.exe"
+  "frontend/dist-electron/Orello Setup 1.0.0.exe#Orello-Setup-1.0.0.exe"
 ```
 
 ## リリース後の配布
@@ -102,14 +102,14 @@ gh release create v1.0.0 \
 
 1. GitHubリポジトリの「Releases」ページにアクセス
 2. 最新バージョン（v1.0.0）を選択
-3. 「Assets」セクションから `TaskManager-Setup-1.0.0.exe` をダウンロード
+3. 「Assets」セクションから `Orello-Setup-1.0.0.exe` をダウンロード
 4. ダウンロードしたEXEを実行してインストール
 
 ### 直接リンク
 
 リリースが公開されると、以下のような直接ダウンロードリンクが利用可能：
 ```
-https://github.com/<username>/<repository>/releases/download/v1.0.0/TaskManager-Setup-1.0.0.exe
+https://github.com/<username>/<repository>/releases/download/v1.0.0/Orello-Setup-1.0.0.exe
 ```
 
 ## 次回以降のリリース
@@ -155,7 +155,7 @@ git push origin v1.1.0
 
 3. **チェックサム** を提供（セキュリティ向上）
    ```bash
-   certutil -hashfile "TaskManager Setup 1.0.0.exe" SHA256
+   certutil -hashfile "Orello Setup 1.0.0.exe" SHA256
    ```
 
 4. **Pre-release** を使用してベータテストを行う

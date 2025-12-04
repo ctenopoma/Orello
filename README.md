@@ -9,7 +9,7 @@ Windows向けタスク管理デスクトップアプリケーション（Trello�
 **現在のバージョン: v1.0.0**
 
 ### インストール手順
-1. [Releases](../../releases) ページから `TaskManager-Setup-1.0.0.exe` をダウンロード
+1. [Releases](../../releases) ページから `Orello-Setup-1.0.0.exe` をダウンロード
 2. ダウンロードしたEXEファイルを実行
 3. インストールウィザードに従ってインストール
 4. デスクトップのショートカットから起動
@@ -29,7 +29,7 @@ Windows向けタスク管理デスクトップアプリケーション（Trello�
 ### 最も簡単な起動方法
 
 1. `frontend/dist-electron/win-unpacked/` フォルダを開く
-2. **TaskManager.exe** をダブルクリックして起動
+2. **Orello.exe** をダブルクリックして起動
 
 これだけでアプリケーションが起動し、Pythonバックエンドも自動的に起動されます。
 
@@ -60,7 +60,7 @@ Windows向けタスク管理デスクトップアプリケーション（Trello�
 2. **コマンドプロンプトから手動で起動してエラーを確認**
    ```bash
    cd frontend/dist-electron/win-unpacked
-   TaskManager.exe
+   Orello.exe
    ```
    エラーメッセージが表示される場合は、そのメッセージを確認してください。
 
@@ -123,8 +123,8 @@ npm run build:electron
 ```
 
 ビルドが完了すると、以下の場所に実行ファイルが作成されます：
-- `frontend/dist-electron/win-unpacked/TaskManager.exe` - 実行ファイル
-- `frontend/dist-electron/TaskManager Setup 1.0.0.exe` - インストーラー（NSISフォーマット）
+- `frontend/dist-electron/win-unpacked/Orello.exe` - 実行ファイル
+- `frontend/dist-electron/Orello Setup 1.0.0.exe` - インストーラー（NSISフォーマット）
 
 ## 🚀 リリース方法（開発者向け）
 

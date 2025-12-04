@@ -13,8 +13,8 @@
     "preview": "vite preview"
   },
   "build": {
-    "appId": "com.taskmanager.app",
-    "productName": "TaskManager",
+    "appId": "com.orello.app",
+    "productName": "Orello",
     "directories": {
       "output": "dist-electron"
     },
