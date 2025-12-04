@@ -3,6 +3,7 @@ const path = require('path');
 const { spawn } = require('child_process');
 
 let mainWindow;
+let pythonProcess;
 
 function createWindow() {
     mainWindow = new BrowserWindow({
@@ -35,24 +36,49 @@ function startPythonBackend() {
         return;
     }
 
-    const pythonExecutable = 'python';
-    const backendDir = path.join(__dirname, '../../');
+    let backendPath;
+    let cwd;
 
-    pythonProcess = spawn(pythonExecutable, ['-m', 'backend.main'], {
-        cwd: backendDir,
-    });
+    if (app.isPackaged) {
+        // In production, the backend executable is in resources/backend_dist/backend.exe
+        backendPath = path.join(process.resourcesPath, 'backend_dist', 'backend.exe');
+        cwd = path.join(process.resourcesPath, 'backend_dist');
+        console.log('Production mode - Backend path:', backendPath);
+        console.log('Production mode - CWD:', cwd);
+    } else {
+        // In development, we are in frontend/electron
+        // We set cwd to project root so 'python -m backend.main' finds 'backend/main.py'
+        cwd = path.join(__dirname, '../../');
+        backendPath = 'python';
+        console.log('Development mode - Backend path:', backendPath);
+        console.log('Development mode - CWD:', cwd);
+    }
 
-    pythonProcess.stdout.on('data', (data) => {
-        console.log(`Python: ${data}`);
-    });
+    try {
+        if (app.isPackaged) {
+            pythonProcess = spawn(backendPath, [], { cwd: cwd });
+        } else {
+            pythonProcess = spawn(backendPath, ['-m', 'backend.main'], { cwd: cwd });
+        }
 
-    pythonProcess.stderr.on('data', (data) => {
-        console.error(`Python Error: ${data}`);
-    });
+        pythonProcess.stdout.on('data', (data) => {
+            console.log(`Python: ${data}`);
+        });
 
-    pythonProcess.on('close', (code) => {
-        console.log(`Python process exited with code ${code}`);
-    });
+        pythonProcess.stderr.on('data', (data) => {
+            console.error(`Python Error: ${data}`);
+        });
+
+        pythonProcess.on('error', (err) => {
+            console.error('Failed to start backend:', err);
+        });
+
+        pythonProcess.on('close', (code) => {
+            console.log(`Python process exited with code ${code}`);
+        });
+    } catch (err) {
+        console.error('Error spawning backend process:', err);
+    }
 }
 
 app.on('ready', () => {

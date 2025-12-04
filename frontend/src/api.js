@@ -42,3 +42,13 @@ export const moveCard = async (cardId, newListId, newPosition) => {
     });
     return response.data;
 };
+
+export const updateCard = async (cardId, title, description) => {
+    const response = await api.put(`/cards/${cardId}`, { title, description });
+    return response.data;
+};
+
+export const deleteCard = async (cardId) => {
+    const response = await api.delete(`/cards/${cardId}`);
+    return response.data;
+};

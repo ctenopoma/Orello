@@ -1,26 +1,34 @@
 import {
-    closestCorners,
     DndContext,
     DragOverlay,
     KeyboardSensor,
     PointerSensor,
+    rectIntersection,
     useSensor,
-    useSensors,
+    useSensors
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createList, moveCard } from '../api';
 import Card from './Card';
 import List from './List';
 
 export default function Board({ board, onUpdate }) {
     const [lists, setLists] = useState(board.lists || []);
+
+    useEffect(() => {
+        setLists(board.lists || []);
+    }, [board]);
     const [activeCard, setActiveCard] = useState(null);
     const [newListTitle, setNewListTitle] = useState('');
     const [isAddingList, setIsAddingList] = useState(false);
 
     const sensors = useSensors(
-        useSensor(PointerSensor),
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 0,
+            },
+        }),
         useSensor(KeyboardSensor, {
             coordinateGetter: sortableKeyboardCoordinates,
         })
@@ -43,60 +51,87 @@ export default function Board({ board, onUpdate }) {
         }
 
         const activeCardId = active.id;
-        const overListId = over.id;
+        const overId = over.id;
 
-        // Find the source list and card
-        let sourceList = null;
-        let cardIndex = -1;
-
-        for (const list of lists) {
-            const idx = list.cards.findIndex((c) => c.id === activeCardId);
-            if (idx !== -1) {
-                sourceList = list;
-                cardIndex = idx;
-                break;
-            }
-        }
-
+        // Find source list
+        const sourceList = lists.find((list) => list.cards.some((c) => c.id === activeCardId));
         if (!sourceList) {
             setActiveCard(null);
             return;
         }
 
         // Find target list
-        const targetList = lists.find((l) => l.id === overListId);
+        let targetList = lists.find((l) => l.id === overId);
+        if (!targetList) {
+            targetList = lists.find((list) => list.cards.some((c) => c.id === overId));
+        }
 
         if (!targetList) {
             setActiveCard(null);
             return;
         }
 
-        // Move card
-        const card = sourceList.cards[cardIndex];
-        const newPosition = targetList.cards.length;
+        const sourceCardIndex = sourceList.cards.findIndex((c) => c.id === activeCardId);
+        const card = sourceList.cards[sourceCardIndex];
 
-        // Update backend
-        await moveCard(card.id, targetList.id, newPosition);
+        let newPosition;
 
-        // Update local state
-        const updatedLists = lists.map((list) => {
-            if (list.id === sourceList.id) {
-                return {
-                    ...list,
-                    cards: list.cards.filter((c) => c.id !== activeCardId),
-                };
+        if (sourceList.id === targetList.id) {
+            // Same list
+            const overCardIndex = targetList.cards.findIndex((c) => c.id === overId);
+            if (overCardIndex !== -1) {
+                newPosition = overCardIndex;
+            } else {
+                // Dropped on list container -> move to end
+                newPosition = targetList.cards.length - 1;
             }
-            if (list.id === targetList.id) {
-                return {
-                    ...list,
-                    cards: [...list.cards, { ...card, list_id: targetList.id }],
-                };
+
+            if (sourceCardIndex === newPosition) {
+                setActiveCard(null);
+                return;
+            }
+        } else {
+            // Different list
+            const overCardIndex = targetList.cards.findIndex((c) => c.id === overId);
+            if (overCardIndex !== -1) {
+                newPosition = overCardIndex;
+            } else {
+                // Dropped on list container -> move to end
+                newPosition = targetList.cards.length;
+            }
+        }
+
+        // Optimistic update
+        const newLists = lists.map((list) => {
+            if (list.id === sourceList.id && list.id === targetList.id) {
+                // Reordering within the same list
+                const newCards = Array.from(list.cards);
+                const [movedCard] = newCards.splice(sourceCardIndex, 1);
+                newCards.splice(newPosition, 0, movedCard);
+                return { ...list, cards: newCards };
+            } else if (list.id === sourceList.id) {
+                // Moving from source list
+                const newCards = Array.from(list.cards);
+                newCards.splice(sourceCardIndex, 1);
+                return { ...list, cards: newCards };
+            } else if (list.id === targetList.id) {
+                // Moving to target list
+                const newCards = Array.from(list.cards);
+                const movedCard = { ...card, list_id: targetList.id };
+                newCards.splice(newPosition, 0, movedCard);
+                return { ...list, cards: newCards };
             }
             return list;
         });
 
-        setLists(updatedLists);
+        setLists(newLists);
         setActiveCard(null);
+
+        // Update backend
+        await moveCard(card.id, targetList.id, newPosition);
+
+        // Sync with backend to ensure consistency
+        if (onUpdate) onUpdate();
     };
 
     const handleAddList = async (e) => {
@@ -117,7 +152,7 @@ export default function Board({ board, onUpdate }) {
 
             <DndContext
                 sensors={sensors}
-                collisionDetection={closestCorners}
+                collisionDetection={rectIntersection}
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
             >
@@ -127,7 +162,7 @@ export default function Board({ board, onUpdate }) {
                             <List
                                 key={list.id}
                                 list={list}
-                                onCardCreated={() => onUpdate()}
+                                onUpdate={onUpdate}
                             />
                         ))}
 

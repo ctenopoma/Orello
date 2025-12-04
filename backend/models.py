@@ -10,7 +10,7 @@ class Board(Base):
     title = Column(String, index=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
-    lists = relationship("List", back_populates="board", cascade="all, delete-orphan")
+    lists = relationship("List", back_populates="board", cascade="all, delete-orphan", order_by="List.position")
 
 class List(Base):
     __tablename__ = "lists"
@@ -22,7 +22,7 @@ class List(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     board = relationship("Board", back_populates="lists")
-    cards = relationship("Card", back_populates="list", cascade="all, delete-orphan")
+    cards = relationship("Card", back_populates="list", cascade="all, delete-orphan", order_by="Card.position")
 
 class Card(Base):
     __tablename__ = "cards"

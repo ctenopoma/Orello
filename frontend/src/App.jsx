@@ -17,8 +17,15 @@ function App() {
     try {
       const data = await getBoards();
       setBoards(data);
-      if (data.length > 0 && !selectedBoard) {
-        setSelectedBoard(data[0]);
+      if (data.length > 0) {
+        if (!selectedBoard) {
+          setSelectedBoard(data[0]);
+        } else {
+          const updatedBoard = data.find((b) => b.id === selectedBoard.id);
+          if (updatedBoard) {
+            setSelectedBoard(updatedBoard);
+          }
+        }
       }
     } catch (error) {
       console.error('Failed to load boards:', error);

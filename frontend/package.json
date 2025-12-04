@@ -24,17 +24,12 @@
     ],
     "extraResources": [
       {
-        "from": "../backend",
-        "to": "backend",
-        "filter": [
-          "**/*",
-          "!**/__pycache__",
-          "!**/*.pyc"
-        ]
+        "from": "backend_dist",
+        "to": "backend"
       }
     ],
     "win": {
-      "target": "nsis",
+      "target": "dir",
       "icon": "public/vite.svg"
     },
     "nsis": {
@@ -60,6 +55,7 @@
     "cross-env": "^10.1.0",
     "electron": "^39.2.4",
     "electron-builder": "^26.0.12",
+    "electron-packager": "^17.1.2",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",

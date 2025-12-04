@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { createCard } from '../api';
 import Card from './Card';
 
-export default function List({ list, onCardCreated }) {
+export default function List({ list, onUpdate }) {
     const [newCardTitle, setNewCardTitle] = useState('');
     const [isAddingCard, setIsAddingCard] = useState(false);
 
@@ -18,7 +18,7 @@ export default function List({ list, onCardCreated }) {
             await createCard(list.id, newCardTitle.trim());
             setNewCardTitle('');
             setIsAddingCard(false);
-            onCardCreated();
+            if (onUpdate) onUpdate();
         }
     };
 
@@ -32,7 +32,7 @@ export default function List({ list, onCardCreated }) {
                     strategy={verticalListSortingStrategy}
                 >
                     {list.cards.map((card) => (
-                        <Card key={card.id} card={card} />
+                        <Card key={card.id} card={card} onUpdate={onUpdate} />
                     ))}
                 </SortableContext>
             </div>

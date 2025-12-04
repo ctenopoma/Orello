@@ -66,5 +66,19 @@ def read_cards(list_id: int, db: Session = Depends(database.get_db)):
 def move_card(card_id: int, new_list_id: int, new_position: int, db: Session = Depends(database.get_db)):
     return crud.update_card_position(db, card_id, new_list_id, new_position)
 
+@app.put("/api/cards/{card_id}", response_model=schemas.Card)
+def update_card(card_id: int, card: schemas.CardCreate, db: Session = Depends(database.get_db)):
+    db_card = crud.update_card(db, card_id=card_id, card=card)
+    if db_card is None:
+        raise HTTPException(status_code=404, detail="Card not found")
+    return db_card
+
+@app.delete("/api/cards/{card_id}")
+def delete_card(card_id: int, db: Session = Depends(database.get_db)):
+    db_card = crud.delete_card(db, card_id=card_id)
+    if db_card is None:
+        raise HTTPException(status_code=404, detail="Card not found")
+    return {"status": "ok"}
+
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)
