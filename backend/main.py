@@ -1,12 +1,16 @@
-from fastapi import FastAPI, Depends, HTTPException
+from typing import List
+
+import uvicorn
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from typing import List
-import uvicorn
 
-from . import models, schemas, crud, database
+from . import crud, database, models, schemas
 
 models.Base.metadata.create_all(bind=database.engine)
+
+# Log database location
+print(f"Database location: {database.db_path}")
 
 app = FastAPI()
 
@@ -44,6 +48,13 @@ def read_board(board_id: int, db: Session = Depends(database.get_db)):
         raise HTTPException(status_code=404, detail="Board not found")
     return db_board
 
+@app.put("/api/boards/{board_id}", response_model=schemas.Board)
+def update_board(board_id: int, board_data: schemas.BoardCreate, db: Session = Depends(database.get_db)):
+    db_board = crud.update_board(db, board_id=board_id, board_data=board_data)
+    if db_board is None:
+        raise HTTPException(status_code=404, detail="Board not found")
+    return db_board
+
 # Lists
 @app.post("/api/boards/{board_id}/lists/", response_model=schemas.List)
 def create_list(board_id: int, list: schemas.ListCreate, db: Session = Depends(database.get_db)):
@@ -52,6 +63,20 @@ def create_list(board_id: int, list: schemas.ListCreate, db: Session = Depends(d
 @app.get("/api/boards/{board_id}/lists/", response_model=List[schemas.List])
 def read_lists(board_id: int, db: Session = Depends(database.get_db)):
     return crud.get_lists(db, board_id=board_id)
+
+@app.put("/api/lists/{list_id}", response_model=schemas.List)
+def update_list(list_id: int, list_data: schemas.ListCreate, db: Session = Depends(database.get_db)):
+    db_list = crud.update_list(db, list_id=list_id, list_data=list_data)
+    if db_list is None:
+        raise HTTPException(status_code=404, detail="List not found")
+    return db_list
+
+@app.delete("/api/lists/{list_id}")
+def delete_list(list_id: int, db: Session = Depends(database.get_db)):
+    db_list = crud.delete_list(db, list_id=list_id)
+    if db_list is None:
+        raise HTTPException(status_code=404, detail="List not found")
+    return {"status": "ok"}
 
 # Cards
 @app.post("/api/lists/{list_id}/cards/", response_model=schemas.Card)

@@ -1,9 +1,70 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain } = require('electron');
 const path = require('path');
 const { spawn } = require('child_process');
 
 let mainWindow;
 let pythonProcess;
+
+const THEMES = {
+    light: 'Light',
+    dark: 'Dark',
+    ocean: 'Ocean',
+    forest: 'Forest',
+    sunset: 'Sunset',
+    purple: 'Purple',
+};
+
+function createMenu() {
+    const template = [
+        {
+            label: 'File',
+            submenu: [
+                {
+                    label: 'Exit',
+                    accelerator: 'CmdOrCtrl+Q',
+                    click: () => {
+                        app.quit();
+                    }
+                }
+            ]
+        },
+        {
+            label: 'View',
+            submenu: [
+                {
+                    label: 'Theme',
+                    submenu: Object.entries(THEMES).map(([key, name]) => ({
+                        label: name,
+                        type: 'radio',
+                        click: () => {
+                            if (mainWindow && mainWindow.webContents) {
+                                mainWindow.webContents.send('set-theme', key);
+                            }
+                        }
+                    }))
+                },
+                { type: 'separator' },
+                {
+                    label: 'Reload',
+                    accelerator: 'CmdOrCtrl+R',
+                    click: () => {
+                        if (mainWindow) mainWindow.reload();
+                    }
+                },
+                {
+                    label: 'Toggle Developer Tools',
+                    accelerator: 'CmdOrCtrl+Shift+I',
+                    click: () => {
+                        if (mainWindow) mainWindow.webContents.toggleDevTools();
+                    }
+                }
+            ]
+        }
+    ];
+
+    const menu = Menu.buildFromTemplate(template);
+    Menu.setApplicationMenu(menu);
+}
 
 function createWindow() {
     mainWindow = new BrowserWindow({
@@ -56,7 +117,18 @@ function startPythonBackend() {
 
     try {
         if (app.isPackaged) {
-            pythonProcess = spawn(backendPath, [], { cwd: cwd });
+            pythonProcess = spawn(backendPath, [], {
+                cwd: cwd,
+                stdio: ['ignore', 'pipe', 'pipe']
+            });
+
+            // Log backend output
+            pythonProcess.stdout.on('data', (data) => {
+                console.log(`[Backend] ${data}`);
+            });
+            pythonProcess.stderr.on('data', (data) => {
+                console.error(`[Backend Error] ${data}`);
+            });
         } else {
             pythonProcess = spawn(backendPath, ['-m', 'backend.main'], { cwd: cwd });
         }
@@ -82,8 +154,14 @@ function startPythonBackend() {
 }
 
 app.on('ready', () => {
+    console.log('App ready - Starting backend...');
     startPythonBackend();
-    setTimeout(createWindow, 2000);
+    console.log('Waiting 3 seconds for backend to start...');
+    setTimeout(() => {
+        console.log('Creating window...');
+        createWindow();
+        createMenu();
+    }, 3000);
 });
 
 app.on('window-all-closed', function () {
@@ -96,6 +174,11 @@ app.on('activate', function () {
     if (mainWindow === null) {
         createWindow();
     }
+});
+
+// IPC handler for theme changes
+ipcMain.on('theme-changed', (event, theme) => {
+    console.log('Theme changed to:', theme);
 });
 
 app.on('will-quit', () => {

@@ -1,5 +1,7 @@
 from sqlalchemy.orm import Session
+
 from . import models, schemas
+
 
 # Board CRUD
 def get_boards(db: Session, skip: int = 0, limit: int = 100):
@@ -15,6 +17,14 @@ def create_board(db: Session, board: schemas.BoardCreate):
 def get_board(db: Session, board_id: int):
     return db.query(models.Board).filter(models.Board.id == board_id).first()
 
+def update_board(db: Session, board_id: int, board_data: schemas.BoardCreate):
+    db_board = db.query(models.Board).filter(models.Board.id == board_id).first()
+    if db_board:
+        db_board.title = board_data.title
+        db.commit()
+        db.refresh(db_board)
+    return db_board
+
 # List CRUD
 def get_lists(db: Session, board_id: int):
     return db.query(models.List).filter(models.List.board_id == board_id).order_by(models.List.position).all()
@@ -24,6 +34,23 @@ def create_list(db: Session, list: schemas.ListCreate, board_id: int):
     db.add(db_list)
     db.commit()
     db.refresh(db_list)
+    return db_list
+
+def update_list(db: Session, list_id: int, list_data: schemas.ListCreate):
+    db_list = db.query(models.List).filter(models.List.id == list_id).first()
+    if db_list:
+        db_list.title = list_data.title
+        db.commit()
+        db.refresh(db_list)
+    return db_list
+
+def delete_list(db: Session, list_id: int):
+    db_list = db.query(models.List).filter(models.List.id == list_id).first()
+    if db_list:
+        # Delete all cards in the list first
+        db.query(models.Card).filter(models.Card.list_id == list_id).delete()
+        db.delete(db_list)
+        db.commit()
     return db_list
 
 # Card CRUD

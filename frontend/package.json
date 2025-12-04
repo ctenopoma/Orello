@@ -16,7 +16,8 @@
     "appId": "com.orello.app",
     "productName": "Orello",
     "directories": {
-      "output": "dist-electron"
+      "output": "dist-electron",
+      "buildResources": "public"
     },
     "files": [
       "dist/**/*",
@@ -25,12 +26,11 @@
     "extraResources": [
       {
         "from": "backend_dist",
-        "to": "backend"
+        "to": "backend_dist"
       }
     ],
     "win": {
-      "target": "dir",
-      "icon": "public/vite.svg"
+      "target": "nsis"
     },
     "nsis": {
       "oneClick": false,

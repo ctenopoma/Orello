@@ -44,7 +44,6 @@ Thumbs.db
 frontend/dist/
 frontend/dist-ssr/
 frontend/dist-electron/
-frontend/dist-packager/
 frontend/backend_dist/
 frontend/build/
 backend/build/

@@ -15,12 +15,16 @@ export default function Card({ card, onUpdate }) {
         transform,
         transition,
         isDragging,
-    } = useSortable({ id: card.id });
+    } = useSortable({
+        id: card.id,
+        disabled: isEditing
+    });
 
     const style = {
         transform: CSS.Transform.toString(transform),
         transition,
-        opacity: isDragging ? 0.5 : 1,
+        opacity: isDragging ? 0.3 : 1,
+        cursor: isDragging ? 'grabbing' : 'grab',
     };
 
     const handleSave = async () => {
@@ -89,7 +93,8 @@ export default function Card({ card, onUpdate }) {
             style={style}
             {...attributes}
             {...listeners}
-            className="group bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-move mb-2 relative"
+            className={`group bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow mb-2 relative ${isDragging ? 'z-50 shadow-lg' : ''
+                }`}
         >
             <div className="pr-6">
                 <h3 className="text-sm font-medium text-gray-900 break-words">{card.title}</h3>

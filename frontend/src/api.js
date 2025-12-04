@@ -16,6 +16,11 @@ export const createBoard = async (title) => {
     return response.data;
 };
 
+export const updateBoard = async (boardId, title) => {
+    const response = await api.put(`/boards/${boardId}`, { title });
+    return response.data;
+};
+
 export const getLists = async (boardId) => {
     const response = await api.get(`/boards/${boardId}/lists/`);
     return response.data;
@@ -23,6 +28,16 @@ export const getLists = async (boardId) => {
 
 export const createList = async (boardId, title) => {
     const response = await api.post(`/boards/${boardId}/lists/`, { title });
+    return response.data;
+};
+
+export const updateList = async (listId, title) => {
+    const response = await api.put(`/lists/${listId}`, { title });
+    return response.data;
+};
+
+export const deleteList = async (listId) => {
+    const response = await api.delete(`/lists/${listId}`);
     return response.data;
 };
 
