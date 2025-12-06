@@ -1,10 +1,10 @@
-<<<<<<< HEAD
 <div align="center">
+  <img src="icon.ico" alt="Orello" width="128" height="128">
   <h3 align="center">Orello</h3>
   <p>A kanban project management application.</p>
 </div>
 
-## originals
+## Originals
 
 this repository is based on kan project.
 https://github.com/kanbn/kan/blob/main
