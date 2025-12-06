@@ -1,0 +1,19 @@
+appId: com.orello.desktop
+productName: Orello
+files:
+  - dist/**/*
+  - package.json
+directories:
+  output: dist_electron
+extraResources:
+  - from: build/app
+    to: app
+  - from: build/migrations
+    to: migrations
+win:
+  target: nsis
+  icon: build/icon.ico
+npmRebuild: false
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true

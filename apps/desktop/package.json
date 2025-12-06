@@ -1,0 +1,23 @@
+{
+    "name": "@orello/desktop",
+    "productName": "Orello",
+    "description": "Orello Desktop Application",
+    "version": "2.0.0",
+    "private": true,
+    "main": "dist/main.js",
+    "scripts": {
+        "build": "node scripts/build.js",
+        "pack": "node scripts/build.js"
+    },
+    "dependencies": {
+        "electron-serve": "^1.2.0",
+        "get-port": "^5.1.1"
+    },
+    "devDependencies": {
+        "@types/node": "^20.17.7",
+        "cross-env": "^7.0.3",
+        "electron": "^28.2.0",
+        "electron-builder": "^24.9.1",
+        "typescript": "catalog:"
+    }
+}

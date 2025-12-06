@@ -1,0 +1,11 @@
+{
+  "extends": "@orello/tsconfig/internal-package.json",
+  "include": ["packages/**/*", "src"],
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./src/*"]
+    }
+  }
+}

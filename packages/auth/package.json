@@ -1,0 +1,12 @@
+{
+    "name": "@orello/auth",
+    "version": "2.0.0",
+    "private": true,
+    "type": "module",
+    "exports": {
+        ".": "./src/index.ts",
+        "./server": "./src/server.ts",
+        "./client": "./src/client.ts"
+    },
+    "dependencies": {}
+}
