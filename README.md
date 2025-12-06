@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div align="center">
   <h3 align="center">Orello</h3>
   <p>A kanban project management application.</p>
