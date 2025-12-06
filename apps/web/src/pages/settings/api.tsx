@@ -13,4 +13,9 @@ const ApiSettingsPage: NextPageWithLayout = () => {
 
 ApiSettingsPage.getLayout = (page) => getDashboardLayout(page);
 
+// Force SSR to avoid router.query issues during build
+export const getServerSideProps = () => {
+  return { props: {} };
+};
+
 export default ApiSettingsPage;

@@ -90,3 +90,56 @@ if (fs.existsSync(directPgliteSrc) && !fs.existsSync(directPgliteDest)) {
 }
 
 console.log('Resources copied successfully.');
+
+// 7. Remove unnecessary large packages from standalone node_modules
+console.log('Removing unnecessary packages to reduce size...');
+const unnecessaryPackages = [
+    'typescript',
+    '@types',
+    'eslint',
+    '@eslint',
+    'prettier',
+    '@typescript-eslint',
+    'webpack',
+    'vite',
+    'esbuild',
+    'rollup',
+    '@swc',
+    'terser',
+    'jest',
+    '@jest',
+    'vitest',
+    '@vitest',
+];
+
+function removePackagesRecursively(dir) {
+    if (!fs.existsSync(dir)) return;
+    
+    const nodeModulesPath = path.join(dir, 'node_modules');
+    if (!fs.existsSync(nodeModulesPath)) return;
+    
+    for (const pkg of unnecessaryPackages) {
+        const pkgPath = path.join(nodeModulesPath, pkg);
+        if (fs.existsSync(pkgPath)) {
+            console.log(`  Removing ${pkg}...`);
+            fs.rmSync(pkgPath, { recursive: true, force: true });
+        }
+    }
+    
+    // Also check subdirectories
+    const entries = fs.readdirSync(nodeModulesPath, { withFileTypes: true });
+    for (const entry of entries) {
+        if (entry.isDirectory() && entry.name.startsWith('@')) {
+            const scopePath = path.join(nodeModulesPath, entry.name);
+            const subEntries = fs.readdirSync(scopePath);
+            if (subEntries.length === 0) {
+                // Remove empty scope directories
+                fs.rmdirSync(scopePath);
+            }
+        }
+    }
+}
+
+removePackagesRecursively(appDest);
+console.log('Cleanup completed.');
+

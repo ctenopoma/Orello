@@ -15,4 +15,9 @@ const CardPage: NextPageWithLayout = () => {
 CardPage.getLayout = (page) =>
   getDashboardLayout(page, <CardRightPanel />, true);
 
+// Force SSR to avoid router.query issues during build
+export const getServerSideProps = () => {
+  return { props: {} };
+};
+
 export default CardPage;
