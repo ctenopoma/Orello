@@ -11,9 +11,16 @@ extraResources:
   - from: build/migrations
     to: migrations
 win:
-  target: nsis
+  target:
+    - target: zip
+      arch: x64
+    - target: nsis
+      arch: x64
   icon: build/icon.ico
 npmRebuild: false
 nsis:
-  oneClick: false
-  allowToChangeInstallationDirectory: true
+  oneClick: true
+  perMachine: false
+  differentialPackage: false
+  runAfterFinish: false
+compression: store
