@@ -55,6 +55,3 @@ Thumbs.db
 
 # Cache
 .cache/
-
-# agent
-.agent/
