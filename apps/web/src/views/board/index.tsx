@@ -1,6 +1,5 @@
 import type { DropResult } from "react-beautiful-dnd";
 import Link from "next/link";
-import { useParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { t } from "@lingui/core/macro";
 import { keepPreviousData } from "@tanstack/react-query";
@@ -47,8 +46,8 @@ import VisibilityButton from "./components/VisibilityButton";
 type PublicListId = string;
 
 export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
-  const params = useParams() as { boardId: string | string[] } | null;
   const router = useRouter();
+  const params = router.query.boardId ? { boardId: router.query.boardId } : null;
   const utils = api.useUtils();
   const { showPopup } = usePopup();
   const { workspace } = useWorkspace();

@@ -8,19 +8,50 @@ directories:
 extraResources:
   - from: build/app
     to: app
+    filter:
+      - '**/*'
+      - '!node_modules/**/@types/**'
+      - '!node_modules/**/typescript/**'
+      - '!node_modules/**/*.md'
+      - '!node_modules/**/README*'
+      - '!node_modules/**/CHANGELOG*'
+      - '!node_modules/**/.eslintrc*'
+      - '!node_modules/**/test/**'
+      - '!node_modules/**/tests/**'
+      - '!node_modules/**/__tests__/**'
+      - '!node_modules/**/*.map'
+      - '!node_modules/**/package-lock.json'
+      - '!node_modules/**/yarn.lock'
+      - '!node_modules/**/.git/**'
+      - '!node_modules/**/.github/**'
+      - '!node_modules/**/docs/**'
+      - '!node_modules/**/examples/**'
+      - '!node_modules/**/.eslintignore'
+      - '!node_modules/**/.prettierrc*'
+      - '!node_modules/**/.gitignore'
+      - '!node_modules/**/.npmignore'
+      - '!node_modules/**/tsconfig.json'
+      - '!node_modules/**/LICENSE'
+      - '!node_modules/**/LICENSES/**'
+      - '!node_modules/**/*.ts'
+      - '!node_modules/**/.d.ts.map'
   - from: build/migrations
     to: migrations
+  - from: build/start-portable.bat
+    to: ../start-portable.bat
+  - from: build/PORTABLE_README_JA.md
+    to: ../README_PORTABLE_JA.md
 win:
   target:
-    - target: zip
-      arch: x64
     - target: nsis
+      arch: x64
+    - target: dir
       arch: x64
   icon: build/icon.ico
 npmRebuild: false
 nsis:
-  oneClick: true
-  perMachine: false
-  differentialPackage: false
-  runAfterFinish: false
-compression: store
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Orello

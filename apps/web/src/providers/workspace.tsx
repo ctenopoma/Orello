@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/router";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 import { api } from "~/utils/api";
@@ -46,7 +46,14 @@ export const WorkspaceProvider: React.FC<{ children: ReactNode }> = ({
   );
   const [hasLoaded, setHasLoaded] = useState(false);
 
-  const workspacePublicId = useSearchParams().get("workspacePublicId");
+  // Only access router.query after mount to avoid SSR issues
+  const [workspacePublicId, setWorkspacePublicId] = useState<string | null>(null);
+  
+  useEffect(() => {
+    if (router.isReady && typeof router.query.workspacePublicId === 'string') {
+      setWorkspacePublicId(router.query.workspacePublicId);
+    }
+  }, [router.isReady, router.query.workspacePublicId]);
 
   const { data, isLoading } = api.workspace.all.useQuery();
   const utils = api.useUtils();

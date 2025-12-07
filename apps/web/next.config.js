@@ -88,7 +88,7 @@ const config = {
   experimental: {
     swcPlugins: [["@lingui/swc-plugin", {}]],
   },
-  serverExternalPackages: ["@electric-sql/pglite"],
+  serverExternalPackages: ["@electric-sql/pglite", "styled-jsx", "@swc/helpers", "@t3-oss/env-nextjs", "@t3-oss/env-core"],
 
   async rewrites() {
     return [

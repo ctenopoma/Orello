@@ -1,5 +1,5 @@
 import type { SocialProvider } from "better-auth/social-providers";
-import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
@@ -163,9 +163,16 @@ export function Auth({ setIsMagicLinkSent, isSignUp }: AuthProps) {
   const { showPopup } = usePopup();
   const oidcProviderName = "OIDC";
   const passwordRef = useRef<HTMLInputElement | null>(null);
+  const router = useRouter();
 
-  const redirect = useSearchParams().get("next");
-  const callbackURL = redirect ?? "/boards";
+  // Only access router.query after mount to avoid SSR issues
+  const [callbackURL, setCallbackURL] = useState("/boards");
+  
+  useEffect(() => {
+    if (router.isReady && typeof router.query.next === 'string') {
+      setCallbackURL(router.query.next);
+    }
+  }, [router.isReady, router.query.next]);
 
   // Safely get environment variables on client side to avoid hydration mismatch
   useEffect(() => {
