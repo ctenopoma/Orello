@@ -23,8 +23,22 @@ const initializePGlite = async (): Promise<dbClient> => {
     process.env.MIGRATIONS_DIR ||
     path.resolve(process.cwd(), "../../packages/db/migrations");
 
+  console.log(`========== PGlite Initialization ==========`);
+  console.log(`process.cwd(): ${process.cwd()}`);
+  console.log(`process.env.PGLITE_DATA_DIR: ${process.env.PGLITE_DATA_DIR}`);
+  console.log(`process.env.MIGRATIONS_DIR: ${process.env.MIGRATIONS_DIR}`);
   console.log(`Using PGlite with dataDir: ${dataDir}`);
   console.log(`Using migrations from: ${migrationsFolder}`);
+
+  // Check if migrations folder exists
+  const fs = await import("fs");
+  const migrationsFolderExists = fs.existsSync(migrationsFolder);
+  console.log(`Migrations folder exists: ${migrationsFolderExists}`);
+  if (migrationsFolderExists) {
+    const files = fs.readdirSync(migrationsFolder);
+    console.log(`Migrations files count: ${files.length}`);
+  }
+  console.log(`============================================`);
 
   const client = new PGlite({
     dataDir,

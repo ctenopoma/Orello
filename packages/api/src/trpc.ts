@@ -50,14 +50,46 @@ export const createInnerTRPCContext = (opts: CreateContextOptions) => {
 };
 
 export const createTRPCContext = async ({ req }: CreateNextContextOptions) => {
-  const db = await initializeDatabase();
-  const baseAuth = initAuth(db);
-  const headers = new Headers(req.headers as Record<string, string>);
-  const auth = createAuthWithHeaders(baseAuth, headers);
+  const logToFile = (message: string) => {
+    try {
+      const fs = require('fs');
+      const path = require('path');
+      const logDir = process.env.PGLITE_DATA_DIR ? path.dirname(process.env.PGLITE_DATA_DIR) : '.';
+      const logFile = path.join(logDir, 'trpc-error.log');
+      fs.appendFileSync(logFile, `[${new Date().toISOString()}] ${message}\n`);
+    } catch (e) {
+      console.error('Failed to write log:', e);
+    }
+  };
 
-  const session = await auth.api.getSession();
+  try {
+    logToFile("Starting TRPC context creation...");
+    logToFile(`process.cwd(): ${process.cwd()}`);
+    logToFile(`PGLITE_DATA_DIR: ${process.env.PGLITE_DATA_DIR}`);
+    logToFile(`MIGRATIONS_DIR: ${process.env.MIGRATIONS_DIR}`);
 
-  return createInnerTRPCContext({ db, user: session?.user, auth });
+    console.log("Initializing database...");
+    const db = await initializeDatabase();
+    console.log("Database initialized successfully");
+
+    console.log("Initializing auth...");
+    const baseAuth = initAuth(db);
+    const headers = new Headers(req.headers as Record<string, string>);
+    const auth = createAuthWithHeaders(baseAuth, headers);
+    console.log("Auth initialized successfully");
+
+    console.log("Getting session...");
+    const session = await auth.api.getSession();
+    console.log("Session retrieved:", session?.user?.email);
+
+    logToFile("TRPC context created successfully");
+    return createInnerTRPCContext({ db, user: session?.user, auth });
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.stack || error.message : String(error);
+    logToFile(`Error creating TRPC context: ${errorMsg}`);
+    console.error("Error creating TRPC context:", error);
+    throw error;
+  }
 };
 
 export const createNextApiContext = async (req: NextApiRequest) => {
